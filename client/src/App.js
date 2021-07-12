@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import NavBar from './components/NavBar'
+import MenuPage from './components/MenuPage'
+import {Switch, Link, Route, withRouter} from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 
-function App() {
+
+function App(props) {
+  const [food, setFood] = useState([])
+  
+  useEffect(() => {
+    fetch('/menu')
+    .then(res => res.json())
+    .then(foodArr => setFood(foodArr))
+  })
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar />
+      <Switch>
+        <Route path={'/menu'}>
+          <MenuPage 
+            food={food}
+          >
+          </MenuPage>
+        </Route>
+        <Route path={'/cart'}>
+          1
+        </Route>
+        <Route path={'/login'}>
+          2
+        </Route>
+        <Route path={'/'}>
+          3
+        </Route>
+      </Switch>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);

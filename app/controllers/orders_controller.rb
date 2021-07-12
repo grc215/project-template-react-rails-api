@@ -1,7 +1,10 @@
 class OrdersController < ApplicationController
+    rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+    rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
+
     def create
-        order = Order.create(order_params)
-        render json: order
+        order = Order.create!(order_params)
+        render json: order, status: 201
     end
 
     def show
@@ -13,6 +16,14 @@ private
 
     def order_params
         params.permit(:user_id, :date, :checkout)
+    end
+
+    def render_not_found
+        render json: {error: "Order not found"}, status: 404
+    end
+
+    def render_error(invalid)
+        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
     end
 
 end
