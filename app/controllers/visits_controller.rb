@@ -5,6 +5,17 @@ class VisitsController < ApplicationController
         render json: visit
     end
 
+    def index
+        visit = Visit.all
+        render json: visit
+    end
+
+    def cart 
+    # Will need to write code to pull the visit of a specific id
+        cart = Visit.all.map{|visit| visit.food}
+        render json: cart
+    end
+
 private
 
     def visit_params
