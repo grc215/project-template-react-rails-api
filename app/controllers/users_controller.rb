@@ -6,10 +6,20 @@ class UsersController < ApplicationController
         render json: user, status: 201
     end
 
+    def login
+        user = User.find_by(name: params[:name])
+        if user && user.authenticate(params[:password])
+            something = encode_token({user_id: user.id})
+            render json: {user: UserSerializer.new(user), token: something}
+        else
+            render json: {error: 'nah'}
+        end
+    end
+
     private
 
     def user_params
-        params.permit(:user, :birthday)
+        params.permit(:name, :password, :birthday)
     end
 
     def render_error(invalid)

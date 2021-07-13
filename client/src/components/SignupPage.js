@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-export default function LoginPage(props) {
+export default function SignupPage(props) {
 
     const [formData, setFormData]=useState({
         name:'',
@@ -21,7 +21,7 @@ export default function LoginPage(props) {
             name: formData.name,
             password: formData.password
         })
-        fetch("/login", {
+        fetch("/users", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -32,7 +32,7 @@ export default function LoginPage(props) {
             })
         })
         .then(res => res.json())
-        .then(props.handleResponse)
+        .then(console.log)
     }
 
     return (
@@ -51,7 +51,7 @@ export default function LoginPage(props) {
                 placeholder="password"
                 value={formData.password} 
                 onChange={handleChange}/>
-                <input type="submit" value="Log in"/>
+                <input type="submit" value="Sign up"/>
             </form>
         </div>
     )

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :orders, only: [:create, :show]
   resources :users, only: [:create]
 
+  post '/login', to: 'users#login'
   get '/menu', to: 'foods#index'
   get '/cart', to: 'visits#cart'
   # Routing logic: fallback requests for React Router.

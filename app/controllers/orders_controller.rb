@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
 
     def create
-        order = Order.create!(order_params)
+        order = @user.orders.create!(order_params)
         render json: order, status: 201
     end
 
@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
 private
 
     def order_params
-        params.permit(:user_id, :date, :checkout)
+        params.permit(:date, :checkout)
     end
 
     def render_not_found

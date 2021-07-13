@@ -1,6 +1,6 @@
 import React from 'react'
 import CartCard from './CartCard'
-import {Card} from 'semantic-ui-react'
+import {Card, Button} from 'semantic-ui-react'
 
 export default function CartPage(props) {
     let renderVisits = props.visits.map(visitsObj => (
@@ -14,6 +14,7 @@ export default function CartPage(props) {
             <Card.Group itemsPerRow={4}>
                 {renderVisits}
             </Card.Group>
+            <Button onClick={props.orderHandler}>Checkout</Button>
         </div>
     )
 }

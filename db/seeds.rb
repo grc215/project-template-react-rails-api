@@ -14,7 +14,7 @@ Food.create({name: 'Applepie', image: 'https://i.ytimg.com/vi/RoHWiA6pogg/maxres
 Food.create({name: 'Saint Louis Ribs', image: 'https://grillgirl.com/wp-content/uploads/2019/12/AdobeStock_231543190-scaled.jpeg', price: 15, description: 'St. Louis Ribs, YUM'})
 
 
-User.create({name: 'Leon', birthday: '1990-01-01'})
-User.create({name: 'Eric', birthday: '1991-02-05'})
-User.create({name: 'Greg', birthday: '1993-02-27'})
-User.create({name: 'Mo', birthday: '1857-06-14'})
+User.create({name: 'Leon', password: "12345", birthday: '1990-01-01'})
+User.create({name: 'Eric', password: "password", birthday: '1991-02-05'})
+User.create({name: 'Greg', password: "abc123", birthday: '1993-02-27'})
+User.create({name: 'Mo', password: "curlys", birthday: '1857-06-14'})
