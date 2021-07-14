@@ -31,7 +31,11 @@ function App(props) {
     console.log(visits)
   }, [])
 
-  let orderStarter = () => {
+  
+  let orderStarter = (addToCart) => {
+    console.log("order started")
+    let openOrder = state.orders.filter(order => order.checkout == false)
+    if (openOrder.length === 0) {
       fetch('/orders', {
         method: "POST",
         headers: {
@@ -39,10 +43,30 @@ function App(props) {
           "authorization": state.token
         },
         body: JSON.stringify({
-          checkout: false,
+          checkout: false
         })
       })
+      .then((res) => res.json())
+      .then((order) => addToCart(order))
     }
+     else {
+       addToCart(openOrder)
+     }
+  //   fetch('/visits', {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //         food_id : props.foodObj.id,
+  //         quantity : 1,
+  //         order_id : openOrder[0].id
+  //     }),
+  //   })
+  //     .then((r) => r.json())
+  //     .then((visitObj) => console.log(visitObj))
+  // }
+}
   
 
   let orderCheckerOuter = () => {
@@ -66,15 +90,6 @@ function App(props) {
     })
   }
 
-  let orderHandler = () => {
-    let openOrder = state.orders.filter(order => order.checkout == false)
-    if (openOrder.length === 0) {
-      orderStarter()
-    } else {
-      orderCheckerOuter()
-      .then(orderStarter())
-  }}
-
   let handleResponse = (resp) => {
     console.log(resp)
     if(resp.token){
@@ -95,17 +110,22 @@ function App(props) {
     <div>
       <NavBar />
       <Switch>
-        <Route path={'/menu'}>
-          <MenuPage 
-            food={food}
-          >
+        <Route path={'/menu'}
+          render={routerProps => {
+            return <div>
+          <MenuPage
+            {...routerProps} orderStarter={orderStarter} 
+            food={food}>
           </MenuPage>
+          </div>
+          }}
+          >
         </Route>
         <Route path={'/cart'}
         render={routerProps => {
           return <div>
             <CartPage 
-              {...routerProps} orderHandler={orderHandler}
+              {...routerProps} orderCheckerOuter={orderCheckerOuter}
               visits = {visits}>
             </CartPage>
           </div>         

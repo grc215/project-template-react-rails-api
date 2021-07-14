@@ -33,6 +33,7 @@ export default function LoginPage(props) {
         })
         .then(res => res.json())
         .then(props.handleResponse)
+        .then(res => console.log("login response", res))
     }
 
     return (

@@ -14,7 +14,7 @@ export default function CartPage(props) {
             <Card.Group itemsPerRow={4}>
                 {renderVisits}
             </Card.Group>
-            <Button onClick={props.orderHandler}>Checkout</Button>
+            <Button onClick={props.orderCheckerOuter}>Checkout</Button>
         </div>
     )
 }

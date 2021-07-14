@@ -1,6 +1,8 @@
 class OrdersController < ApplicationController
+   
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
+    before_action :authorized, only: [:create]
 
     def create
         order = @user.orders.create!(order_params)
