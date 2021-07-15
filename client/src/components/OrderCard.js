@@ -3,11 +3,9 @@ import {Card} from 'semantic-ui-react'
 
 export default function OrderCard(props) {
     console.log(props.past_order.foods)
-    let listOfFood = () => {props.past_order.foods.map(food => {
-       food.map(food => {
+    let listOfFood = props.past_order.foods.map(food => {
         return <li>{food.name}</li>
-       })
-    })}
+    })
     return (
         <div>
             <Card>
@@ -15,7 +13,7 @@ export default function OrderCard(props) {
                 <Card.Meta>
                     <span className='food'>
                         <ul>
-                            {listOfFood()}
+                            {listOfFood}
                         </ul>
                     </span>
                 </Card.Meta>

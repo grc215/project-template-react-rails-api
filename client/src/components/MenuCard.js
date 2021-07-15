@@ -4,36 +4,13 @@ import {Card, Image, Button} from 'semantic-ui-react'
 
 export default function MenuCard(props) {
 
-// let handleClick = (order) => {
-//     props.orderStarter()
-//     addToCart(order)
-// }
-
-// let addToCart = (order) => {
-   
-//     fetch('/visits', {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//             food_id : props.foodObj.id,
-//             quantity : 1,
-//             order_id : order.id
-//         }),
-//       })
-//         .then((r) => r.json())
-//         .then((visitObj) => console.log(visitObj))
-
-// }
-
 const handleClick = (e) => {
     props.createVisit(props.foodObj.id)
 }
           
     return (
-        <Card>
-            <Image src={props.foodObj.image} wrapped ui={false} />
+        <Card className="menuCard">
+            <Image src={props.foodObj.image} />
             <Card.Content>
                 <Card.Header>{props.foodObj.name}</Card.Header>
                 <Card.Meta>

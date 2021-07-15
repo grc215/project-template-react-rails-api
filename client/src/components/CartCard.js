@@ -13,7 +13,7 @@ export default function CartCard(props) {
     }
           
     return (
-        <Card>
+        <Card className="cartCard">
             <Image src={props.visitsObj.food_image} wrapped ui={false} />
             <Card.Content>
                 <Card.Header>{props.visitsObj.food_name}</Card.Header>

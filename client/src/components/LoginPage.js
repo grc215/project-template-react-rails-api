@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {Card, Form, Button} from 'semantic-ui-react'
 
 export default function LoginPage(props) {
 
@@ -8,6 +9,7 @@ export default function LoginPage(props) {
         })
     
     const handleChange = (e) => {
+        e.preventDefault()
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -37,23 +39,34 @@ export default function LoginPage(props) {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name</label>
-                <input type="text" 
-                name="name"
-                placeholder="name" 
-                value={formData.name} 
-                onChange={handleChange}
-                />
-                <label htmlFor="password">Password</label>
-                <input type="password"
-                name="password" 
-                placeholder="password"
-                value={formData.password} 
-                onChange={handleChange}/>
-                <input type="submit" value="Log in"/>
-            </form>
+        <div className='login'>
+            <Card >
+                <h1>Log in</h1>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Field>
+                        <label>Name</label>
+                        <input 
+                            type='text' 
+                            name='name' 
+                            placeholder='Name' 
+                            value={formData.name} 
+                            onChange={handleChange}
+                        />
+                    </Form.Field>
+                    <Form.Field>
+                        <label>Password</label>
+                        <input 
+                            placeholder="Password" 
+                            name='password' 
+                            type='password' 
+                            value={formData.password} 
+                            onChange={handleChange}
+                        />
+                    </Form.Field>
+                    <br />
+                    <Button type='submit'>Submit</Button>
+                </Form>
+            </Card>
         </div>
     )
 }

@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.grubText {
+  font-size: 60px;
+  font-weight: bold;
+  text-align: center; 
+}
+
+.homeTextDiv {
+  margin-top: 30%;
+  margin: auto;
+  width: 60%;
+}
+
+.navBar {
+  background-color: lightcoral;
+  height: 2em;
+}
+
+.login {
+  position: absolute;
+    top: 30%;
+    left: 40%;
+    
+  
+}

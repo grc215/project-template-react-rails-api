@@ -10,7 +10,6 @@ import React, { useState, useEffect } from 'react'
 
 function App(props) {
   const [food, setFood] = useState([])
-  const [visits, setVisits] = useState([])
 
   const [state, setState] = useState({
     name: '',
@@ -28,28 +27,6 @@ function App(props) {
     .then(foodArr => setFood(foodArr))
   },[])
 
-
-  // let orderCheckerOuter = () => {
-  //   let today = new Date();
-  //   let dd = String(today.getDate()).padStart(2, '0');
-  //   let mm = String(today.getMonth() + 1).padStart(2, '0');
-  //   let yyyy = today.getFullYear();
-  //   today = yyyy + '-' + mm + '-' + dd
-  //   today.toString();
-
-  //   fetch('/orders', {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "authorization": state.token
-  //     },
-  //     body: JSON.stringify({
-  //       checkout: true,
-  //       date: today
-  //     })
-  //   })
-  // }
-
   let handleResponse = (resp) => {
     console.log(resp)
     if(resp.token){
@@ -63,7 +40,7 @@ function App(props) {
 
       props.history.push("/menu")
     } else {
-      alert("Messed up")
+      alert("unlucky, maybe next time")
     }
   }
 
@@ -79,16 +56,8 @@ function App(props) {
       })
     })
     .then(res => res.json())
-    .then(newVisit => {
-      let copyOfVisits = [...state.current_cart.visits, newVisit]
-      let copyOfCart = {
-        ...state.current_cart,
-        visits: copyOfVisits
-      }
-      setState({
-        ...state,
-        current_cart: copyOfCart
-      })
+    .then(resp => {
+      checkVisitExistence(resp)
     })
   }
 
@@ -110,6 +79,42 @@ function App(props) {
     })
   }
 
+  const addToVisit = (visit) => {
+    let copyOfVisits = [...state.current_cart.visits, visit]
+      let copyOfCart = {
+        ...state.current_cart,
+        visits: copyOfVisits
+      }
+      setState({
+        ...state,
+        current_cart: copyOfCart
+      })
+  }
+  const updateVisitState = (updatedVisit) => {
+    const newVisit = state.current_cart.visits.map(visit => {
+      if (visit.id === updatedVisit.id){
+        return updatedVisit
+      } else {
+        return visit
+      }
+    })
+    setState({
+      ...state,
+      current_cart: {
+        ...state.current_cart,
+        visits: newVisit
+      }
+    })
+  }
+
+  const checkVisitExistence = (visit) => {
+    if (state.current_cart.visits.some(visitObj => visitObj.id == visit.id)){
+      updateVisitState(visit)
+    } else {
+      addToVisit(visit)
+    }
+  }
+
   let deleteFromCart = (deletedID) => {
     let copyOfVisits = state.current_cart.visits.filter(visitObj => {
       return visitObj.id !== deletedID
@@ -122,6 +127,7 @@ function App(props) {
       }
     })
   }
+
   
   console.log(state)
   console.log(state.past_orders)
@@ -174,7 +180,11 @@ function App(props) {
           <SignupPage></SignupPage>
         </Route>
         <Route path={'/'}>
-          3
+          <div className="homeTextDiv">
+            <h1 className="grubText">
+              GrubHub if your definition of a hub supports a single service
+            </h1>
+          </div>
         </Route>
       </Switch>
     </div>
