@@ -1,5 +1,5 @@
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :date, :checkout
+  attributes :id, :checkout, :timestamp
   # has_one :user
   has_many :visits
   has_many :foods

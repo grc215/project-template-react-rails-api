@@ -9,22 +9,26 @@ export default function MenuCard(props) {
 //     addToCart(order)
 // }
 
-let addToCart = (order) => {
+// let addToCart = (order) => {
    
-    fetch('/visits', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            food_id : props.foodObj.id,
-            quantity : 1,
-            order_id : order.id
-        }),
-      })
-        .then((r) => r.json())
-        .then((visitObj) => console.log(visitObj))
+//     fetch('/visits', {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//             food_id : props.foodObj.id,
+//             quantity : 1,
+//             order_id : order.id
+//         }),
+//       })
+//         .then((r) => r.json())
+//         .then((visitObj) => console.log(visitObj))
 
+// }
+
+const handleClick = (e) => {
+    props.createVisit(props.foodObj.id)
 }
           
     return (
@@ -38,7 +42,7 @@ let addToCart = (order) => {
             <Card.Description>
                 {props.foodObj.description}
             </Card.Description>
-            <Button onClick={props.orderStarter(addToCart)} >
+            <Button onClick={handleClick}>
                 Add to Cart
             </Button>
             </Card.Content>

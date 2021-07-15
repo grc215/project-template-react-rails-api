@@ -3,18 +3,26 @@ import {Card, Image, Button} from 'semantic-ui-react'
 
 
 export default function CartCard(props) {
+
+    let handleDelete = () => {
+        fetch(`/visits/${props.visitsObj.id}`,{
+            method: "DELETE",
+        })
+        .then(res => res.json())
+        .then(() => props.deleteFromCart(props.visitsObj.id))
+    }
           
     return (
         <Card>
-            <Image src={props.visitsObj.image} wrapped ui={false} />
+            <Image src={props.visitsObj.food_image} wrapped ui={false} />
             <Card.Content>
-                <Card.Header>{props.visitsObj.name}</Card.Header>
+                <Card.Header>{props.visitsObj.food_name}</Card.Header>
                 <Card.Meta>
-                    <span className='price'>${props.visitsObj.price}</span>
+                    <span className='price'>${props.visitsObj.food_price}</span>
+                    <span className='quantity'>quantity: {props.visitsObj.quantity}</span>
+                    <span className='total'>total price: {props.visitsObj.quantity * props.visitsObj.food_price}</span>
                 </Card.Meta>
-            <Card.Description>
-                {props.visitsObj.description}
-            </Card.Description>
+            <Button onClick={handleDelete}>delete</Button>
             </Card.Content>
         </Card>
     )

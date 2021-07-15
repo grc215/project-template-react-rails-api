@@ -3,10 +3,11 @@ import CartCard from './CartCard'
 import {Card, Button} from 'semantic-ui-react'
 
 export default function CartPage(props) {
-    let renderVisits = props.visits.map(visitsObj => (
+    let renderVisits = props.current_cart.visits.map(visitsObj => (
         <CartCard 
             key={visitsObj.id}
             visitsObj={visitsObj}
+            deleteFromCart={props.deleteFromCart}
         />
     ))
     return (
@@ -14,7 +15,7 @@ export default function CartPage(props) {
             <Card.Group itemsPerRow={4}>
                 {renderVisits}
             </Card.Group>
-            <Button onClick={props.orderCheckerOuter}>Checkout</Button>
+            <Button onClick={props.checkoutAndCreateCart}>Checkout</Button>
         </div>
     )
 }

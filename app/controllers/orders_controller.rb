@@ -1,31 +1,15 @@
-class OrdersController < ApplicationController
-   
+class OrdersController < ApplicationController  
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :render_invalid
-    before_action :authorized, only: [:create]
+    before_action :authorized
 
-    def create
-        order = @user.orders.create!(order_params)
-        render json: order, status: 201
+    def transform
+        current_cart = @user.orders.find(params[:id])
+        current_cart.update(checkout: true)
+        new_cart = @user.orders.create(checkout: false)
+        render json: {
+            current_cart: OrderSerializer.new(new_cart),
+            transformed_cart: OrderSerializer.new(current_cart)
+        }
     end
-
-    def show
-        order = Order.find(params[:id])
-        render json: order
-    end
-
-private
-
-    def order_params
-        params.permit(:date, :checkout)
-    end
-
-    def render_not_found
-        render json: {error: "Order not found"}, status: 404
-    end
-
-    def render_error(invalid)
-        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
-    end
-
 end

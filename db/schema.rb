@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2021_07_09_213312) do
   create_table "orders", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.date "date"
-    t.boolean "checkout"
+    t.boolean "checkout", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2021_07_09_213312) do
   create_table "visits", force: :cascade do |t|
     t.bigint "food_id", null: false
     t.bigint "order_id", null: false
-    t.integer "quantity"
+    t.integer "quantity", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["food_id"], name: "index_visits_on_food_id"

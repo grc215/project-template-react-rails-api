@@ -1,20 +1,32 @@
 class VisitsController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :render_error
     def create
-        visit = Visit.create!(visit_params)
-        render json: visit
+        # visit = Visit.find_by(food_id: params[:food_id])
+        # if visit
+        #     visit.update(quantity: visit.quantity + 1)
+        #     render json: visit
+        # else
+            visit = Visit.create!(visit_params)
+            render json: visit        
+        # end
     end
 
-    def index
-        visit = Visit.all
-        render json: visit
+    def destroy
+        visit = Visit.find_by(id: params[:food_id])
+        visit.destroy
+        render json: {}
     end
 
-    def cart 
-    # Will need to write code to pull the visit of a specific id
-        cart = Visit.all.map{|visit| visit.food}
-        render json: cart
-    end
+    # def index
+    #     visit = Visit.all
+    #     render json: visit
+    # end
+
+    # def cart 
+    # # Will need to write code to pull the visit of a specific id
+    #     cart = Visit.all.map{|visit| visit.food}
+    #     render json: cart
+    # end
 
 private
 

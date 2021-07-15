@@ -7,7 +7,7 @@ export default function MenuPage(props) {
         <MenuCard 
             key={foodObj.id}
             foodObj={foodObj}
-            orderStarter= {props.orderStarter}
+            createVisit={props.createVisit}
         />
     ))
     return (

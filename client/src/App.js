@@ -3,6 +3,7 @@ import MenuPage from './components/MenuPage'
 import CartPage from './components/CartPage'
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'
+import PastOrders from './components/PastOrders'
 import {Switch, Link, Route, withRouter} from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
@@ -12,9 +13,12 @@ function App(props) {
   const [visits, setVisits] = useState([])
 
   const [state, setState] = useState({
-    id: 0,
-    username: "",
-    orders: [],
+    name: '',
+    current_cart:{
+      id: 0,
+      visits: []
+    },
+    past_orders: [],
     token: "",
   })
   
@@ -24,78 +28,35 @@ function App(props) {
     .then(foodArr => setFood(foodArr))
   },[])
 
-  useEffect(() => {
-    fetch('/cart')
-    .then(res => res.json())
-    .then(visitsArr => setVisits(visitsArr))
-    console.log(visits)
-  }, [])
 
-  
-  let orderStarter = (addToCart) => {
-    console.log("order started")
-    let openOrder = state.orders.filter(order => order.checkout == false)
-    if (openOrder.length === 0) {
-      fetch('/orders', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "authorization": state.token
-        },
-        body: JSON.stringify({
-          checkout: false
-        })
-      })
-      .then((res) => res.json())
-      .then((order) => addToCart(order))
-    }
-     else {
-       addToCart(openOrder)
-     }
-  //   fetch('/visits', {
+  // let orderCheckerOuter = () => {
+  //   let today = new Date();
+  //   let dd = String(today.getDate()).padStart(2, '0');
+  //   let mm = String(today.getMonth() + 1).padStart(2, '0');
+  //   let yyyy = today.getFullYear();
+  //   today = yyyy + '-' + mm + '-' + dd
+  //   today.toString();
+
+  //   fetch('/orders', {
   //     method: "POST",
   //     headers: {
   //       "Content-Type": "application/json",
+  //       "authorization": state.token
   //     },
   //     body: JSON.stringify({
-  //         food_id : props.foodObj.id,
-  //         quantity : 1,
-  //         order_id : openOrder[0].id
-  //     }),
+  //       checkout: true,
+  //       date: today
+  //     })
   //   })
-  //     .then((r) => r.json())
-  //     .then((visitObj) => console.log(visitObj))
   // }
-}
-  
-
-  let orderCheckerOuter = () => {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd
-    today.toString();
-
-    fetch('/orders', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "authorization": state.token
-      },
-      body: JSON.stringify({
-        checkout: true,
-        date: today
-      })
-    })
-  }
 
   let handleResponse = (resp) => {
     console.log(resp)
     if(resp.token){
       setState({
         name: resp.user.name,
-        orders: resp.user.orders,
+        past_orders: resp.user.past_orders,
+        current_cart: resp.user.current_cart,
         token: resp.token
       })
       localStorage.token = resp.token
@@ -105,7 +66,65 @@ function App(props) {
       alert("Messed up")
     }
   }
+
+  let createVisit = (food_id) => {
+    fetch('/visits', {
+      method: "POST",
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        food_id: food_id,
+        order_id: state.current_cart.id
+      })
+    })
+    .then(res => res.json())
+    .then(newVisit => {
+      let copyOfVisits = [...state.current_cart.visits, newVisit]
+      let copyOfCart = {
+        ...state.current_cart,
+        visits: copyOfVisits
+      }
+      setState({
+        ...state,
+        current_cart: copyOfCart
+      })
+    })
+  }
+
+  let checkoutAndCreateCart = () => {
+    fetch(`/orders/${state.current_cart.id}/transform`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': state.token
+      }
+    })
+    .then(res => res.json())
+    .then((resp) => {
+      let copyOfPastOrders = [...state.past_orders, resp.transformed_cart]
+      setState({
+        ...state,
+        current_cart: resp.current_cart,
+        past_orders: copyOfPastOrders
+      })
+    })
+  }
+
+  let deleteFromCart = (deletedID) => {
+    let copyOfVisits = state.current_cart.visits.filter(visitObj => {
+      return visitObj.id !== deletedID
+    })
+    setState({
+      ...state,
+      current_cart: {
+        id: state.current_cart.id,
+        visits: copyOfVisits
+      }
+    })
+  }
+  
   console.log(state)
+  console.log(state.past_orders)
   return (
     <div>
       <NavBar />
@@ -114,7 +133,7 @@ function App(props) {
           render={routerProps => {
             return <div>
           <MenuPage
-            {...routerProps} orderStarter={orderStarter} 
+            {...routerProps} createVisit={createVisit}
             food={food}>
           </MenuPage>
           </div>
@@ -125,8 +144,9 @@ function App(props) {
         render={routerProps => {
           return <div>
             <CartPage 
-              {...routerProps} orderCheckerOuter={orderCheckerOuter}
-              visits = {visits}>
+              {...routerProps} checkoutAndCreateCart={checkoutAndCreateCart}
+              deleteFromCart={deleteFromCart}
+              current_cart = {state.current_cart}>
             </CartPage>
           </div>         
         }}
@@ -143,6 +163,12 @@ function App(props) {
             </div>
           }}
           >
+        </Route>
+        <Route path={'/orders'}
+        >
+          <PastOrders 
+            past_orders={state.past_orders}/>
+
         </Route>
         <Route path={'/signup'}>
           <SignupPage></SignupPage>
